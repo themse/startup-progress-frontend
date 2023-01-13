@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
