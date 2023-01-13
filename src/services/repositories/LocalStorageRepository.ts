@@ -21,8 +21,8 @@ export abstract class LocalStorageRepository<TData extends object>
     this.prefixKey = prefixKey;
   }
 
-  find(criteria: unknown): TData[];
-  find(criteria: { select: (keyof TData)[] }): Partial<TData>[] {
+  find(criteria?: unknown): TData[];
+  find(criteria?: { select: (keyof TData)[] }): Partial<TData>[] {
     const allKeys = Object.keys(this.storage);
     const pattern = `^${this.prefixKey}`;
 
@@ -41,7 +41,7 @@ export abstract class LocalStorageRepository<TData extends object>
     }, [] as Partial<TData>[]);
 
     // Select necessary fields
-    if (criteria?.select.length > 0) {
+    if (criteria && criteria.select.length > 0) {
       const selectSet = new Set(criteria.select);
 
       result = result.map((data) => {
