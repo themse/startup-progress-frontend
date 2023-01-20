@@ -15,7 +15,7 @@ const repositoryFactory = (prefixKey: string) => {
   throw new Error(`Repository with prefix [${prefixKey}] not found`);
 };
 
-export type ProgressStepType = { [prefixStepName: string]: ProgressEntity[] };
+export type ProgressStepType = { [stepName: string]: ProgressEntity[] };
 
 type DataReturn = {
   getAllStepList: () => ProgressStepType;
