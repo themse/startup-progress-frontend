@@ -2,9 +2,9 @@ import { FC, useEffect, useState } from 'react';
 
 import { stepsOrderList } from 'app/common/entities/Progress';
 import { Checkmark as CheckmarkIcon } from 'components/icons/Checkmark';
-import { InputCheckbox } from 'components/form/InputCheckbox';
 import { ProgressStepType, useLocalStorage } from 'hooks/useLocalStorage';
 import { REPOSITORY_PREFIX as PROGRESS_REPO_PREFIX } from 'app/common/repositories/ProgressRepository';
+import { ProgressStepList } from './ProgressStepList';
 
 export const ProgressSteps: FC = () => {
   const { getAllStepList, onToggleTask, prePopulateData } =
@@ -42,18 +42,11 @@ export const ProgressSteps: FC = () => {
                 </h2>
                 <CheckmarkIcon className="w-8 h-8 text-black" />
               </header>
-              <ul className="space-y-2">
-                {progressStepList[stepName].map((item) => (
-                  <li key={item.id}>
-                    <InputCheckbox
-                      name={item.id!}
-                      label={item.task}
-                      isChecked={item.isChecked}
-                      onChange={(): void => onToggle(item.id!)}
-                    />
-                  </li>
-                ))}
-              </ul>
+              <ProgressStepList
+                stepName={stepName}
+                progressStepList={progressStepList}
+                onToggle={onToggle}
+              />
             </div>
           ))}
       </section>
