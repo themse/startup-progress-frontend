@@ -6,6 +6,7 @@ import {
   REPOSITORY_PREFIX as progressRepoPrefix,
 } from 'app/common/repositories/ProgressRepository';
 import { ProgressEntity, Steps } from 'app/common/entities/Progress';
+import { progressStepList } from 'app/common/mocks/data';
 
 const repositoryFactory = (prefixKey: string) => {
   if (prefixKey === progressRepoPrefix) {
@@ -14,12 +15,14 @@ const repositoryFactory = (prefixKey: string) => {
   throw new Error(`Repository with prefix [${prefixKey}] not found`);
 };
 
-type ProgressStepType = { [key: string]: ProgressEntity[] };
+export type ProgressStepType = { [prefixStepName: string]: ProgressEntity[] };
 
 type DataReturn = {
   getAllStepList: () => ProgressStepType;
   getValuesByStep: (step: Steps) => ProgressEntity[] | null;
   onToggleTask: (taskId: string) => ProgressEntity | never;
+
+  prePopulateData: () => void;
 };
 
 export const useLocalStorage = (prefixKey: string): DataReturn => {
@@ -41,6 +44,19 @@ export const useLocalStorage = (prefixKey: string): DataReturn => {
     return mappedData;
   }, [repository]);
 
+  // For test purpose
+  const prePopulateData = useCallback((): void => {
+    const stepList = getAllStepList();
+
+    if (Object.keys(stepList).length > 0) {
+      return;
+    }
+
+    progressStepList.forEach((item) => {
+      repository.create(item, item.id);
+    });
+  }, [getAllStepList, repository]);
+
   const getValuesByStep = useCallback(
     (step: Steps): ProgressEntity[] | null => {
       const stepList = getAllStepList();
@@ -50,12 +66,6 @@ export const useLocalStorage = (prefixKey: string): DataReturn => {
     [getAllStepList]
   );
 
-  const _generateStorageKey = useCallback((data: ProgressEntity): string => {
-    const taskId = data.id ?? uuidv4();
-
-    return [data.step, taskId].join('-');
-  }, []);
-
   const onToggleTask = useCallback(
     (taskId: string): ProgressEntity | never => {
       const data = repository.find();
@@ -63,19 +73,21 @@ export const useLocalStorage = (prefixKey: string): DataReturn => {
 
       if (task) {
         const updatedTask = { ...task, isChecked: !task.isChecked };
-        const storageKey = _generateStorageKey(task);
+        const storageKey = task.id ?? uuidv4();
 
         return repository.update(storageKey, updatedTask);
       } else {
         throw new Error(`Task with id ${taskId} not found`);
       }
     },
-    [_generateStorageKey, repository]
+    [repository]
   );
 
   return {
     getAllStepList,
     getValuesByStep,
     onToggleTask,
+
+    prePopulateData,
   };
 };

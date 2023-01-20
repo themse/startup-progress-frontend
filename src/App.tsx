@@ -2,12 +2,15 @@ import { FC } from 'react';
 
 import { BaseLayout } from 'components/layout/BaseLayout';
 import { Container } from 'components/Container';
+import { ProgressSteps } from 'app/components/progress-steps/ProgressSteps';
 
 const App: FC = () => {
   return (
     <BaseLayout>
       <Container>
-        <p>Hello World</p>
+        <div className="flex justify-center">
+          <ProgressSteps />
+        </div>
       </Container>
     </BaseLayout>
   );

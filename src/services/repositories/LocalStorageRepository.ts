@@ -93,7 +93,7 @@ export abstract class LocalStorageRepository<TData extends object>
   update(key: string, value: Partial<TData>): TData | never {
     const keyWithPrefix = this.getKeyWithPrefix(key);
 
-    const data = this.findOne(keyWithPrefix);
+    const data = this.findOne(key);
 
     if (data === null) {
       throw new Error(`data with key ${key} not found`);

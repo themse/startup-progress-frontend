@@ -6,6 +6,12 @@ export enum Steps {
   NONE = 'none',
 }
 
+export const stepsOrderList = [
+  Steps.FOUNDATION,
+  Steps.DISCOVERY,
+  Steps.DELIVERY,
+];
+
 export interface ProgressEntity {
   step: Steps;
   task: string;
