@@ -13,7 +13,20 @@ export const ProgressSteps: FC = () => {
 
   const onToggle = (taskId: string): void => {
     const updatedTask = onToggleTask(taskId);
-    // TODO implement
+
+    const taskList = progressStepList?.[updatedTask.step] ?? [];
+    const updatedTaskList = taskList.map((taskItem) =>
+      taskItem.id === updatedTask.id
+        ? { ...taskItem, ...updatedTask }
+        : taskItem
+    );
+
+    const updatedProgressStepList = {
+      ...progressStepList,
+      [updatedTask.step]: updatedTaskList,
+    };
+
+    setProgressStepList(updatedProgressStepList);
   };
 
   useEffect(() => {
