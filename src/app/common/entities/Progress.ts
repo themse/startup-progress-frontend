@@ -10,7 +10,7 @@ export const stepsOrderList = [
   Steps.FOUNDATION,
   Steps.DISCOVERY,
   Steps.DELIVERY,
-];
+] as const;
 
 export interface ProgressEntity {
   step: Steps;

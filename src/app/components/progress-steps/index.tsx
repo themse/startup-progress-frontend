@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Steps, stepsOrderList } from 'app/common/entities/Progress';
+import { stepsOrderList } from 'app/common/entities/Progress';
 import { Checkmark as CheckmarkIcon } from 'components/icons/Checkmark';
 import { ProgressStepType, useLocalStorage } from 'hooks/useLocalStorage';
 import { REPOSITORY_PREFIX as PROGRESS_REPO_PREFIX } from 'app/common/repositories/ProgressRepository';
@@ -11,11 +11,19 @@ export const ProgressSteps: FC = () => {
     useLocalStorage(PROGRESS_REPO_PREFIX);
   const [progressStepList, setProgressStepList] = useState<ProgressStepType>();
   const [stepCompletedStatuses, setStepCompletedStatuses] = useState<
-    Map<Steps, boolean>
+    Map<
+      typeof stepsOrderList[number],
+      {
+        isCompleted: boolean;
+        position: number;
+      }
+    >
   >(() =>
-    Object.values(Steps)
-      .filter((stepItem) => stepItem !== Steps.NONE)
-      .reduce((acc, item) => acc.set(item, false), new Map())
+    stepsOrderList.reduce(
+      (acc, item, idx) =>
+        acc.set(item, { isCompleted: false, position: idx + 1 }),
+      new Map()
+    )
   );
 
   const onToggle = (taskId: string): void => {
@@ -54,8 +62,8 @@ export const ProgressSteps: FC = () => {
         const isCompleted = progressStepList[stepName].every(
           (step) => step.isChecked
         );
-
-        updatedStepCompletedStatuses.set(stepName, isCompleted);
+        const value = updatedStepCompletedStatuses.get(stepName)!;
+        updatedStepCompletedStatuses.set(stepName, { ...value, isCompleted });
       });
       setStepCompletedStatuses(updatedStepCompletedStatuses);
     }
@@ -75,7 +83,7 @@ export const ProgressSteps: FC = () => {
                   </span>
                   {stepName}
                 </h2>
-                {stepCompletedStatuses.get(stepName) && (
+                {stepCompletedStatuses.get(stepName)?.isCompleted && (
                   <CheckmarkIcon className="w-8 h-8 text-black" />
                 )}
               </header>
@@ -83,6 +91,7 @@ export const ProgressSteps: FC = () => {
                 stepName={stepName}
                 progressStepList={progressStepList}
                 onToggle={onToggle}
+                isDisabled={stepCompletedStatuses.get(stepName)?.isCompleted}
               />
             </div>
           ))}

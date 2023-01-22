@@ -7,6 +7,8 @@ import { InputCheckbox } from 'components/form/InputCheckbox';
 type Props = {
   stepName: Steps;
   progressStepList: ProgressStepType;
+  isDisabled?: boolean;
+
   onToggle: (taskId: string) => void;
 };
 
@@ -14,6 +16,8 @@ export const ProgressStepList: FC<Props> = ({
   stepName,
   progressStepList,
   onToggle,
+
+  isDisabled = false,
 }) => {
   return (
     <div>
@@ -24,6 +28,7 @@ export const ProgressStepList: FC<Props> = ({
               name={item.id!}
               label={item.task}
               isChecked={item.isChecked}
+              isDisabled={isDisabled}
               onChange={(): void => onToggle(item.id!)}
             />
           </li>
