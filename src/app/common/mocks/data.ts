@@ -14,7 +14,7 @@ export const progressStepList: Required<ProgressEntity>[] = [
     id: uuidv4(),
     step: Steps.FOUNDATION,
     task: 'Set mission & vision',
-    isChecked: true,
+    isChecked: false,
     priority: 1002,
   },
   {
