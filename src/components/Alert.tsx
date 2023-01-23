@@ -4,8 +4,9 @@ import clsx from 'clsx';
 import { Info as InfoIcon } from './icons/Info';
 import { Close as CloseIcon } from './icons/Close';
 import { AlertKind } from 'context/alert/types';
+import { Overlay } from './Overlay';
 
-const baseStyles = 'flex flex-col gap-2 p-4 xs:mx-2 text-sm rounded-lg';
+const baseStyles = 'flex flex-col gap-2 p-4 xs:mx-2 text-sm rounded-lg z-50';
 const customStyles = {
   [AlertKind.INFO]:
     'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
@@ -35,35 +36,38 @@ export const Alert: FC<Props> = ({
   className,
   children,
   onClose: onCloseProp,
-  type = AlertKind.DANGER,
+  type = AlertKind.INFO,
 }) => {
   const onClose = (): void => {
     onCloseProp();
   };
 
   return (
-    <div
-      className={clsx([baseStyles, customStyles[type], className])}
-      role="alert"
-    >
-      <div className="flex gap-2">
-        <InfoIcon />
-        <span className="sr-only">{type}</span>
-        <div>
-          <span className="font-medium">{title}</span>{' '}
-          {message && <span>{message}</span>}
+    <>
+      <div
+        className={clsx([baseStyles, customStyles[type], className])}
+        role="alert"
+      >
+        <div className="flex gap-2">
+          <InfoIcon />
+          <span className="sr-only">{type}</span>
+          <div>
+            <span className="font-medium">{title}</span>{' '}
+            {message && <span>{message}</span>}
+          </div>
+          <button
+            type="button"
+            className="ml-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8 hover:cursor-pointer hover:bg-blue-200 dark:hover:bg-gray-700"
+            aria-label="Close"
+            onClick={onClose}
+          >
+            <span className="sr-only">Close</span>
+            <CloseIcon />
+          </button>
         </div>
-        <button
-          type="button"
-          className="ml-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8 hover:cursor-pointer hover:bg-blue-200 dark:hover:bg-gray-700"
-          aria-label="Close"
-          onClick={onClose}
-        >
-          <span className="sr-only">Close</span>
-          <CloseIcon />
-        </button>
+        {children}
       </div>
-      {children}
-    </div>
+      <Overlay />
+    </>
   );
 };

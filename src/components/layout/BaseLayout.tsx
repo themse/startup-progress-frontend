@@ -21,6 +21,7 @@ export const BaseLayout: FC<Props> = ({ children }) => {
       {alertList.length > 0 && (
         <Alert
           className="absolute top-2 left-1 right-1"
+          type={alertList[0].type}
           title={alertList[0].title}
           message={alertList[0].message}
           onClose={closeAlert}
