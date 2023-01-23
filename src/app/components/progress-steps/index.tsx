@@ -4,12 +4,18 @@ import { Checkmark as CheckmarkIcon } from 'components/icons/Checkmark';
 import { ProgressStepList } from './ProgressStepList';
 import { useProgressStep } from 'hooks/useProgressStep';
 import { useStepCompletedStatus } from 'hooks/useStepCompletedStatus';
+import { useLazyRandomFact } from 'hooks/useLazyRandomFact';
 
 export const ProgressSteps: FC = () => {
   const { progressStepList, onToggle } = useProgressStep();
 
-  const { completedStatusList, onChangeCompletedStatusList } =
-    useStepCompletedStatus();
+  const {
+    completedStatusList,
+    isAllStepsCompleted,
+    onChangeCompletedStatusList,
+  } = useStepCompletedStatus();
+
+  const { fact, getFact, clearFact } = useLazyRandomFact();
 
   useEffect(() => {
     if (progressStepList) {
@@ -17,8 +23,17 @@ export const ProgressSteps: FC = () => {
     }
   }, [progressStepList, onChangeCompletedStatusList]);
 
+  useEffect(() => {
+    if (isAllStepsCompleted) {
+      getFact();
+    } else {
+      clearFact();
+    }
+  }, [clearFact, getFact, isAllStepsCompleted]);
+
   return (
     <div className="bg-tertiary w-80 p-7">
+      <p>{fact}</p>
       <section className="bg-white px-6 py-4">
         <h1 className="text-lg font-bold py-1">My startup progress</h1>
         {progressStepList &&

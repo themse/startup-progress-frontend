@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { stepsOrderList } from 'app/common/entities/Progress';
 import { ProgressStepType } from './useProgressStepStorage';
@@ -11,6 +11,8 @@ type CompletedStatus = {
 
 type DataReturn = {
   completedStatusList: CompletedStatus[];
+  isAllStepsCompleted: boolean;
+
   onChangeCompletedStatusList: (progressStepList: ProgressStepType) => void;
 };
 
@@ -28,6 +30,7 @@ export const useStepCompletedStatus = (): DataReturn => {
   const [completedStatusList, setCompletedStatusList] = useState<
     CompletedStatus[]
   >(initialCompletedStatusState);
+  const [isAllStepsCompleted, setIsAllStepsCompleted] = useState(false);
 
   const _initializeStatusList = (
     stepList: ProgressStepType,
@@ -82,5 +85,17 @@ export const useStepCompletedStatus = (): DataReturn => {
     []
   );
 
-  return { completedStatusList, onChangeCompletedStatusList };
+  useEffect(() => {
+    const updatedIsAllStepsCompleted = completedStatusList.every(
+      (statusData) => statusData.isCompleted
+    );
+
+    setIsAllStepsCompleted(updatedIsAllStepsCompleted);
+  }, [completedStatusList]);
+
+  return {
+    completedStatusList,
+    isAllStepsCompleted,
+    onChangeCompletedStatusList,
+  };
 };

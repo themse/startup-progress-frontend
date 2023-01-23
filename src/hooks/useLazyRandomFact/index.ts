@@ -15,6 +15,7 @@ type DataReturn = {
   fact?: string | null;
 
   getFact: () => Promise<string | undefined>;
+  clearFact: () => void;
 };
 
 export const useLazyRandomFact = (): DataReturn => {
@@ -42,5 +43,9 @@ export const useLazyRandomFact = (): DataReturn => {
     }
   }, []);
 
-  return { getFact, fact, isLoading, err };
+  const clearFact = useCallback((): void => {
+    dispatch({ type: FactReducerActionKind.CLEAR_FACT });
+  }, []);
+
+  return { getFact, clearFact, fact, isLoading, err };
 };

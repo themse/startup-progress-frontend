@@ -14,6 +14,8 @@ export enum ReducerActionKind {
   FETCH_FACT,
   SUCCESS_FACT,
   FAILED_FACT,
+
+  CLEAR_FACT,
 }
 
 type ReducerAction = {
@@ -45,6 +47,13 @@ export const reducer = (state: State, action: ReducerAction): State => {
         fact: null,
         err: action.payload ?? 'Something went wrong',
         isLoading: false,
+      };
+    }
+
+    case ReducerActionKind.CLEAR_FACT: {
+      return {
+        ...initialState,
+        fact: null,
       };
     }
 
