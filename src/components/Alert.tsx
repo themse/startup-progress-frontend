@@ -1,28 +1,21 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import clsx from 'clsx';
 
 import { Info as InfoIcon } from './icons/Info';
 import { Close as CloseIcon } from './icons/Close';
-
-enum AlertTypes {
-  INFO = 'info',
-  DANGER = 'danger',
-  SUCCESS = 'success',
-  WARNING = 'warning',
-  DARK = 'dark',
-}
+import { AlertKind } from 'context/alert/types';
 
 const baseStyles = 'flex flex-col gap-2 p-4 xs:mx-2 text-sm rounded-lg';
 const customStyles = {
-  [AlertTypes.INFO]:
+  [AlertKind.INFO]:
     'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
-  [AlertTypes.DANGER]:
+  [AlertKind.DANGER]:
     'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
-  [AlertTypes.SUCCESS]:
+  [AlertKind.SUCCESS]:
     'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
-  [AlertTypes.WARNING]:
+  [AlertKind.WARNING]:
     'text-yellow-700 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300',
-  [AlertTypes.DARK]:
+  [AlertKind.DARK]:
     'text-gray-700 bg-gray-50 dark:bg-gray-800 dark:text-gray-300',
 };
 
@@ -30,17 +23,19 @@ type Props = {
   title: string;
   onClose: () => void;
 
-  type?: AlertTypes;
+  type?: AlertKind;
   message?: string;
   className?: string;
+  children?: ReactNode;
 };
 
 export const Alert: FC<Props> = ({
   title,
   message,
   className,
+  children,
   onClose: onCloseProp,
-  type = AlertTypes.DANGER,
+  type = AlertKind.DANGER,
 }) => {
   const onClose = (): void => {
     onCloseProp();
@@ -68,6 +63,7 @@ export const Alert: FC<Props> = ({
           <CloseIcon />
         </button>
       </div>
+      {children}
     </div>
   );
 };

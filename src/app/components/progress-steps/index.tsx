@@ -5,6 +5,8 @@ import { ProgressStepList } from './ProgressStepList';
 import { useProgressStep } from 'hooks/useProgressStep';
 import { useStepCompletedStatus } from 'hooks/useStepCompletedStatus';
 import { useLazyRandomFact } from 'hooks/useLazyRandomFact';
+import { useAlert } from 'context/alert';
+import { AlertKind, AlertType } from 'context/alert/types';
 
 export const ProgressSteps: FC = () => {
   const { progressStepList, onToggle } = useProgressStep();
@@ -16,6 +18,7 @@ export const ProgressSteps: FC = () => {
   } = useStepCompletedStatus();
 
   const { fact, getFact, clearFact } = useLazyRandomFact();
+  const { pushAlert } = useAlert();
 
   useEffect(() => {
     if (progressStepList) {
@@ -31,9 +34,19 @@ export const ProgressSteps: FC = () => {
     }
   }, [clearFact, getFact, isAllStepsCompleted]);
 
+  useEffect(() => {
+    if (fact) {
+      const alert: AlertType = {
+        type: AlertKind.SUCCESS,
+        title: fact,
+      };
+
+      pushAlert(alert);
+    }
+  }, [fact, pushAlert]);
+
   return (
     <div className="bg-tertiary w-80 p-7">
-      <p>{fact}</p>
       <section className="bg-white px-6 py-4">
         <h1 className="text-lg font-bold py-1">My startup progress</h1>
         {progressStepList &&
